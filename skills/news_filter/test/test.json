@@ -1,12 +1,12 @@
 {
     "payload": {
-        "source":"espn",
+        "source":"abc-news"
     },
     "properties": {
         "api_token": "c474c16b92274c538f647d92387b00c7",
-        "filter_type": "top_filter",
-        "batch_size": 4,
-        "batch_no": 1
+        "filter_type": "source_filter",
+        "batch_size": 10,
+        "batch_no": 2
     }
 }
 
