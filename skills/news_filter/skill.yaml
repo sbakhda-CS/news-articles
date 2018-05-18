@@ -1,0 +1,82 @@
+camel: 1.0.0
+name: nf/news_filter
+title: News Filter
+description: Filters news articles by various factors
+
+properties:
+  - name: api_token
+    title: API token
+    description: API token for using the website
+    type: string
+    defaultValue: c474c16b92274c538f647d92387b00c7
+  - name: filter_type
+    title: Filter Type
+    description: type of filter
+    type: Enum
+    defaultValue: all_filter
+    validValues:
+      - top_filter
+      - all_filter
+      - source_filter
+  - name: batch_size
+    title: number of results per request
+    description: number of results per request (up to 100)
+    type: number
+    defaultValue: 5
+  - name: batch_no
+    title: batch number
+    description: batch number from which to display results
+    type: number
+    defaultValue: 1
+
+inputs:
+  - name: input
+    title: input
+    parameters:
+      - name: country
+        type: string
+        title: News Country
+        description: the 2-letter ISO 3166-1 code of the country you want to get headlines for
+        required: false
+      - name: category
+        type: string
+        title: News Category
+        description: The category you want to get headlines for
+        required: false
+      - name: query
+        type: string
+        title: Search Query
+        description: Keywords or a phrase to search for
+        required: false
+      - name: source
+        type: string
+        title: News Source
+        description: news sources or blogs you want headlines from
+        required: false
+    routing:
+      all:
+        action: nf/news_filter
+        runtime: cortex/functions
+        output: output
+
+outputs:
+  - name: output
+    title: Output containing filter results
+    parameters:
+      - name: status
+        type: string
+        description: if the request was success
+        required: false
+      - name: results
+        type: array
+        format: objects
+        description: result array for articles or sources
+        required: false
+      - name: error_code
+        type: string
+        description: error code
+        required: false
+      - name: error_message
+        type: string
+        description: error message
+        required: false
