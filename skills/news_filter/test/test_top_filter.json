@@ -1,11 +1,13 @@
 {
     "payload": {
-        "query": "bitcoin"
+        "query": "IT",
+        "country": "in",
+        "category": "technologyo"
     },
     "properties": {
         "api_token": "c474c16b92274c538f647d92387b00c7",
         "filter_type": "top_filter",
-        "batch_size": 5,
+        "batch_size": 3,
         "batch_no": 1
     }
 }
