@@ -5,7 +5,7 @@
     "properties": {
         "api_token": "c474c16b92274c538f647d92387b00c7",
         "filter_type": "all_filter",
-        "batch_size": 10,
+        "batch_size": 1,
         "batch_no": 1
     }
 }

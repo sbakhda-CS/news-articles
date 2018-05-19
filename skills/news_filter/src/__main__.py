@@ -80,7 +80,7 @@ def filter_news(country, category, source, query, batch_size, batch_no, api_toke
             url += '&page=' + str(batch_no)
 
         if not(source or query or country or category):
-            return  url, None, None, "noParams", "Add more parameters, such as country, category, query or  source"
+            return  url, "error", None, "noParams", "Add more parameters, such as country, category, query or  source"
 
         response = requests.get(url).json()
 
@@ -98,11 +98,11 @@ def filter_news(country, category, source, query, batch_size, batch_no, api_toke
 
         response = requests.get(url).json()
 
-        if query is not None or query != "":
-            return url, None, None, "wrongParams", "Query parameter is not applicable for source filter"
+        if query is not None:
+            return url, "error", None, "wrongParams", "Query parameter is not applicable for source filter"
 
         if not(source or country or category):
-            return url, None, None, "noParams", "Add more parameters, such as source, country or category"
+            return url, "error", None, "noParams", "Add more parameters, such as source, country or category"
 
         e = error_check(url, response)
         if e is not None: return e
@@ -139,10 +139,10 @@ def filter_news(country, category, source, query, batch_size, batch_no, api_toke
             url += '&page=' + str(batch_no)
 
         if country or category:
-            return url, None, None, "wrongParams", "Country and category parameters are not applicable for all filter"
+            return url, "error", None, "wrongParams", "Country and category parameters are not applicable for all filter"
 
         if not(source or query):
-            return url, None, None, "noParams", "Add more parameters, such as query and source"
+            return url, "error", None, "noParams", "Add more parameters, such as query and source"
 
         response = requests.get(url).json()
 
@@ -151,7 +151,7 @@ def filter_news(country, category, source, query, batch_size, batch_no, api_toke
 
     # wrong filter chosen
     else:
-        status = None
+        status = "error"
         results = None
         error_code = 'wrongFilter'
         error_message = 'wrong filter'
@@ -172,22 +172,21 @@ def error_check(url, response):
 
     # checking if response was received
     if response is None:
-        return url, None, None, "noResponse", "No response was recieved"
+        return url, "error", None, "noResponse", "No response was recieved"
 
     # checking if response had an error
     if response.get('status') == 'error' or \
             not(response.get('code') is None or response.get('message') is  None):
-        return url, None, None, response.get('code'), response.get('message')
+        return url, "error", None, response.get('code'), response.get('message')
 
     # checking if response contains any results
     if (response.get('articles') is None and len(response.get('sources')) == 0) \
         or (response.get('sources') is None and len(response.get('articles')) == 0) :
-        return url, None, None, "noResults", "No results are available for your request"
+        return url, "error", None, "noResults", "No results are available for your request"
 
     # return None if no errors
     return None
 
-#
 # print(filter_news(None, None, None, "ben+ka+loda",1,1, "c474c16b92274c538f647d92387b00c7","all_filter"))
 # print(filter_news(None, None, None, "ben+ka+loda",1,1, "c474c16b92274c538f647d92387b00c7","source_filter"))
 # print(filter_news("in", "technology", "bbc-news" , "IT",10,1, "c474c16b92274c538f647d92387b00c7","top_filter"))
