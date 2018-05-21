@@ -4,11 +4,13 @@ title: News Filter
 description: Filters news articles by various factors
 
 properties:
-  - name: api_token
+  -
+    name: api_token
     title: API token
     description: API token for using the website
     type: string
-  - name: filter_type
+  -
+    name: filter_type
     title: Filter Type
     description: type of filter
     type: Enum
@@ -17,12 +19,14 @@ properties:
       - top_filter
       - all_filter
       - source_filter
-  - name: batch_size
+  -
+    name: batch_size
     title: number of results per request
     description: number of results per request (up to 100)
     type: number
     defaultValue: 5
-  - name: batch_no
+  -
+    name: batch_no
     title: batch number
     description: batch number from which to display results
     type: number
