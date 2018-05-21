@@ -72,6 +72,13 @@ def filter_news(country, category, source, query, batch_size, batch_no, api_toke
     else:
         batch_no = 1
 
+    # check if category is valid
+    if category is not None:
+        if category not in ['business', 'sports', 'entertainment', 'general', 'health', 'science', 'technology']:
+            return url, "error", None, "wrongCategory", \
+       "Category must be one of 'business', 'sports', 'entertainment', 'general', 'health', 'science', 'technology'."
+
+
     # the top news filter
     if filter_type == 'top_filter':
 

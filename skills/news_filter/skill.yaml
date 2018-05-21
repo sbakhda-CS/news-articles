@@ -38,18 +38,10 @@ inputs:
         description: the 2-letter ISO 3166-1 code of the country you want to get headlines for
         required: false
       - name: category
-        type: Enum
+        type: string
         title: News Category
         description: The category you want to get headlines for
         required: false
-        validValues:
-          - business
-          - entertainment
-          - general
-          - health
-          - science
-          - technology
-          - sports
       - name: query
         type: string
         title: Search Query
