@@ -1,6 +1,6 @@
 camel: 1.0.0
-name: nf/news_filter
-title: News Filter
+name: cortex/news_articles
+title: News Articles
 description: Filters news articles by various factors
 
 properties:
@@ -58,13 +58,13 @@ inputs:
         required: false
     routing:
       all:
-        action: nf/news_filter
+        action: cortex/news_articles
         runtime: cortex/functions
         output: output
 
 outputs:
   - name: output
-    title: Output containing filter results
+    title: Output containing article results
     parameters:
       - name: status
         type: string

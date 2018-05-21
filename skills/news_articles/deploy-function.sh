@@ -7,4 +7,4 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ${SCRIPT_DIR}/build-function.sh
 
 # Deploy our functions to Cortex setting the code to their respective zips
-cortex actions deploy nf/news_filter --code "${SCRIPT_DIR}/build/function.zip" --kind python:3
+cortex actions deploy cortex/news_articles --code "${SCRIPT_DIR}/build/function.zip" --kind python:3
