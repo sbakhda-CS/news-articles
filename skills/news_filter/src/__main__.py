@@ -61,11 +61,23 @@ def filter_news(country, category, source, query, batch_size, batch_no, api_toke
     # initialize the url to request
     url = 'https://newsapi.org/v2/'
 
+    # check if batch_size and batch_no are valid
+    if batch_size is not None:
+        if batch_size > 100: batch_size = 100
+        if batch_size < 1: batch_size = 1
+    else:
+        batch_size = 5
+    if batch_no is not None:
+        if batch_no < 1: batch_no = 1
+    else:
+        batch_no = 1
+
     # the top news filter
     if filter_type == 'top_filter':
 
         url += 'top-headlines?apiKey=' + api_token
 
+        # adding parameters to URL
         if source:
             url += '&sources=' + source
         if country and not source:
@@ -79,8 +91,9 @@ def filter_news(country, category, source, query, batch_size, batch_no, api_toke
         if batch_no:
             url += '&page=' + str(batch_no)
 
-        if not(source or query or country or category):
-            return  url, "error", None, "noParams", "Add more parameters, such as country, category, query or  source"
+        # getting the response and checking for errors
+        if not(source or country or category):
+            return url, "error", None, "tooFewParams", "Add more parameters, such as country, category, query or  source"
 
         response = requests.get(url).json()
 
@@ -91,22 +104,26 @@ def filter_news(country, category, source, query, batch_size, batch_no, api_toke
     elif filter_type == 'source_filter':
 
         url += 'sources?apiKey=' + api_token
+
+        # adding parameters to URL
         if country:
             url += '&country=' + country
         if category:
             url += '&category=' + category
 
+        # getting the response and checking for errors
         response = requests.get(url).json()
 
         if query is not None:
             return url, "error", None, "wrongParams", "Query parameter is not applicable for source filter"
 
         if not(source or country or category):
-            return url, "error", None, "noParams", "Add more parameters, such as source, country or category"
+            return url, "error", None, "tooFewParams", "Add more parameters, such as source, country or category"
 
         e = error_check(url, response)
         if e is not None: return e
 
+        # filtering batch_size, batch_no, and source from the results
         ss = response.get('sources')
 
         if source:
@@ -129,8 +146,10 @@ def filter_news(country, category, source, query, batch_size, batch_no, api_toke
     elif filter_type == 'all_filter':
 
         url += 'everything?apiKey=' + api_token
+
+        # adding parameters to URL
         if source:
-            url += '&source=' + str(source)
+            url += '&sources=' + str(source)
         if query:
             url += '&q=' + str(query)
         if batch_size:
@@ -138,11 +157,11 @@ def filter_news(country, category, source, query, batch_size, batch_no, api_toke
         if batch_no:
             url += '&page=' + str(batch_no)
 
+        # getting the response and checking for errors
         if country or category:
             return url, "error", None, "wrongParams", "Country and category parameters are not applicable for all filter"
-
         if not(source or query):
-            return url, "error", None, "noParams", "Add more parameters, such as query and source"
+            return url, "error", None, "tooFewParams", "Add more parameters, such as query and source"
 
         response = requests.get(url).json()
 
@@ -186,8 +205,3 @@ def error_check(url, response):
 
     # return None if no errors
     return None
-
-# print(filter_news(None, None, None, "ben+ka+loda",1,1, "c474c16b92274c538f647d92387b00c7","all_filter"))
-# print(filter_news(None, None, None, "ben+ka+loda",1,1, "c474c16b92274c538f647d92387b00c7","source_filter"))
-# print(filter_news("in", "technology", "bbc-news" , "IT",10,1, "c474c16b92274c538f647d92387b00c7","top_filter"))
-
