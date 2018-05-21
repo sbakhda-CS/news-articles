@@ -1,1149 +1,148 @@
 ---
-title: "News Insights"
-date: "2018-02-02"
+title: "News Finder"
+date: "2018-05-21"
 toc: true
 menu:
   main:
-    parent: "ml-skills"
-    identifier: "news-insights"
-    #weight: 4420
+    parent: "ml-skills????"
+    identifier: "news-finder"
 ---
 
-Discovery News is included with Discovery.
-Watson Discovery News is an indexed dataset that is pre-enriched with the following cognitive insights:
-Keyword Extraction, Entity Extraction, Semantic Role Extraction, Sentiment Analysis, Relation Extraction, and Category Classification.
-
-Watson Discovery News is updated continuously with new articles.
-Discovery News English is updated with approximately 300,000 new articles daily.
-Discovery News Spanish is updated with approximately 60,000 new articles daily;
-Discovery News Korean with 10,000 new articles daily.
-The news sources vary by language, so the query results for each collection will not be identical.
+News Api is an API to get the latest news articles from over 30,000 sources in various languages and countries. There are 3 main ways to find news from the API:
+- finding top headlines
+- finding articles
+- finding news sources
 
 ## Use cases
+- Latest news: finding the trending articles and topics in different countries and categories
+- Keyword search: find articles containing certain keywords
+- News Sources: finding sources in different countries and categories
 
-- News alerting - Create news alerts by taking advantage of the support for entities, keywords, categories, and sentiment analysis to watch for both news and how it is perceived.
--  Event detection - The subject/action/object semantic role extraction checks for terms/actions such as "acquisition", "election results", or "IPO".
--  Trending topics in the news - Identify popular topics and monitor increases and decreases in how frequently they (or related topics) are mentioned.
+## Properties
+The skill takes 4 properties:
+- api_tokens: API token for using the website https://newsapi.org/
+- filter_type: type of filter, must be one of: 
+	1. top_filter: filtering the top headlines based on country, category, source, and/or query
+	2. all_filter: filtering all the articles based on source and/or query
+	3. source_filter: filtering the news sources based on country, category, and/or source
+- batch_size: The response for any query comes in chunks or batches. batch_size is the number of results to be returned per request. Must be between 1 and 100. 
+- batch_no: The [batch_no]th batch containing [batch_size] results is returned. Must be at least 1. 
 
 ## Inputs
-skill takes text as input.A sample example for the input is shown below:
+The skill takes up to 4 inputs: 
+- country: The 2-letter ISO 3166-1 code of the country you want to get headlines for. Check https://newsapi.org/sources for the complete list. Note: you can't mix this param with the sources param.
+- category: Must be one of 'business', 'sports', 'entertainment', 'general', 'health', 'science', 'technology'
+- source: Must be one from the list on https://newsapi.org/sources
+- query: Keywords or phrases to search for.
 
+	Advanced search is supported here:
+
+	Surround phrases with quotes (") for exact match.
+	Prepend words or phrases that must appear with a + symbol. Eg: +bitcoin
+	Prepend words that must not appear with a - symbol. Eg: -bitcoin
+	Alternatively you can use the AND / OR / NOT keywords, and optionally group these with parenthesis. Eg: crypto AND (ethereum OR litecoin) NOT bitcoin.
+	The complete value for the query must be URL-encoded.
+
+### Sample Input: top_filter
 ```
-  "input_query":"Apple inc","num_of_results":"1",
-  "display_crawl_date":1, "display_publication_date":1, "display_url":1, "display_host":1,
-  "display_text":1, "display_country":1,
-  "display_enriched_title":1, "display_enriched_text":1,
-  "display_entities":1, "display_sentiment":1, "display_semantic_roles":1, "display_concepts":1,
-  "display_categories":1, "display_relations":1, "display_keywords":1
+{
+    "payload": {
+        "country" : "ru",
+        "category": "sports"
+    },
+    "properties": {
+        "api_token": "c474c16b92274c538f647d92387b00c7",
+        "filter_type": "top_filter",
+        "batch_size": 4,
+        "batch_no": 1
+    }
+}
 ```
+
+### Sample Input: all_filter
+```
+{
+    "payload": {
+        "source":"cnn",
+        "query": "trump"
+    },
+    "properties": {
+        "api_token": "c474c16b92274c538f647d92387b00c7",
+        "filter_type": "all_filter",
+        "batch_no": 1000
+    }
+}
+```
+
+### Sample Input: source_filter
+```
+{
+    "payload": {
+        "country": "in"
+    },
+    "properties": {
+        "api_token": "c474c16b92274c538f647d92387b00c7",
+        "filter_type": "source_filter",
+        "batch_size": 100,
+        "batch_no": 1
+    }
+}
+```
+
 
 ## Outputs
 
 An example output for the News Insights API is shown below:
 
 ```
-{
-	"matching_results": 17032929,
-	"passages": [],
-	"results": [
-		{
-			"id": "Nu2IUIxHuqYxC-RX8ZLUdtnCP2rWsKPTaOT-Sd5OVwg5CT5k2muxYzqEFvBmkyH3",
-			"result_metadata": {
-				"score": 1
-			},
-			"enriched_title": {
-				"entities": [],
-				"sentiment": {
-					"document": {
-						"score": 0,
-						"label": "neutral"
-					}
-				},
-				"semantic_roles": [],
-				"concepts": [
-					{
-						"text": "Marketing",
-						"relevance": 0.854117,
-						"dbpedia_resource": "http://dbpedia.org/resource/Marketing"
-					}
-				],
-				"categories": [
-					{
-						"score": 0.768898,
-						"label": "/careers/career advice"
-					},
-					{
-						"score": 0.636583,
-						"label": "/business and industrial/advertising and marketing/marketing"
-					},
-					{
-						"score": 0.0101212,
-						"label": "/law, govt and politics/legal issues"
-					}
-				],
-				"relations": [],
-				"keywords": [
-					{
-						"text": "Career Advice",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.91324
-					},
-					{
-						"text": "need",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.625478
-					},
-					{
-						"text": "marketing",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.623263
-					}
-				]
-			},
-			"crawl_date": "2018-03-04T06:09:19Z",
-			"url": "https://www.reddit.com/r/marketing/comments/81uvw1/in_need_of_some_career_advice/",
-			"host": "reddit.com",
-			"text": "Hi all, Brief Background: As mentioned above, I would love to hear some input on what steps I can take to get the most out of my marketing degree. I am currently a Senior marketing student with a communication minor and graduate this spring. I am 22 and have worked since I was 16. Most of the jobs tended to be in the food industry but I did have one job with the YMCA where I was able to be promoted to a camp director role and that is the closest link to professional experience I have. I am certified in AdWord fundamentals and am working on Google Analytics and understand getting certifications can be helpful. My biggest issue right now is wanting to apply for full time positions but not graduating until this Spring so I do not know if I will even be considered for the position. Some",
-			"main_image_url": "https://www.redditstatic.com/icon.png",
-			"country": "US",
-			"source_type": "mainstream",
-			"language": "en",
-			"publication_date": "2018-03-04T00:00:00Z",
-			"enriched_text": {
-				"entities": [
-					{
-						"count": 1,
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"text": "director",
-						"relevance": 0.52504,
-						"type": "JobTitle"
-					}
-				],
-				"sentiment": {
-					"document": {
-						"score": 0.448422,
-						"label": "positive"
-					}
-				},
-				"semantic_roles": [
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " As mentioned above, I would love to hear some input on what steps I can take to get the most out of my marketing degree.",
-						"object": {
-							"text": "to hear some input on what steps I can take to get the most out of my marketing degree",
-							"keywords": [
-								{
-									"text": "marketing degree"
-								},
-								{
-									"text": "input"
-								},
-								{
-									"text": "steps"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "love",
-								"tense": "future"
-							},
-							"text": "love",
-							"normalized": "love"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " As mentioned above, I would love to hear some input on what steps I can take to get the most out of my marketing degree.",
-						"object": {
-							"text": "some input on what steps I can take to get the most out of my marketing degree",
-							"keywords": [
-								{
-									"text": "input"
-								},
-								{
-									"text": "steps"
-								},
-								{
-									"text": "marketing degree"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "hear",
-								"tense": "future"
-							},
-							"text": "would love to hear",
-							"normalized": "would love to hear"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " I am currently a Senior marketing student with a communication minor and graduate this spring.",
-						"object": {
-							"text": "a Senior marketing student with a communication minor and graduate this spring",
-							"keywords": [
-								{
-									"text": "Senior marketing student"
-								},
-								{
-									"text": "communication"
-								},
-								{
-									"text": "spring"
-								}
-							],
-							"entities": []
-						},
-						"action": {
-							"verb": {
-								"text": "be",
-								"tense": "present"
-							},
-							"text": "am",
-							"normalized": "be"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " I am 22 and have worked since I was 16.",
-						"object": {
-							"text": "22"
-						},
-						"action": {
-							"verb": {
-								"text": "be",
-								"tense": "present"
-							},
-							"text": "am",
-							"normalized": "be"
-						}
-					},
-					{
-						"subject": {
-							"text": "worked"
-						},
-						"sentence": " I am 22 and have worked since I was 16.",
-						"action": {
-							"verb": {
-								"text": "have",
-								"tense": "present"
-							},
-							"text": "have",
-							"normalized": "have"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " I am 22 and have worked since I was 16.",
-						"action": {
-							"verb": {
-								"text": "work",
-								"tense": "past"
-							},
-							"text": "have worked",
-							"normalized": "have work"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " I am 22 and have worked since I was 16.",
-						"object": {
-							"text": "16"
-						},
-						"action": {
-							"verb": {
-								"text": "be",
-								"tense": "past"
-							},
-							"text": "was",
-							"normalized": "be"
-						}
-					},
-					{
-						"subject": {
-							"text": "Most of the jobs",
-							"keywords": [
-								{
-									"text": "jobs"
-								}
-							]
-						},
-						"sentence": " Most of the jobs tended to be in the food industry but I did have one job with the YMCA where I was able to be promoted to a camp director role and that is the closest link to professional experience I have.",
-						"object": {
-							"text": "to be in the food industry",
-							"keywords": [
-								{
-									"text": "food industry"
-								}
-							],
-							"entities": []
-						},
-						"action": {
-							"verb": {
-								"text": "tend",
-								"tense": "past"
-							},
-							"text": "tended",
-							"normalized": "tend"
-						}
-					},
-					{
-						"subject": {
-							"text": "Most of the jobs",
-							"keywords": [
-								{
-									"text": "jobs"
-								}
-							]
-						},
-						"sentence": " Most of the jobs tended to be in the food industry but I did have one job with the YMCA where I was able to be promoted to a camp director role and that is the closest link to professional experience I have.",
-						"action": {
-							"verb": {
-								"text": "be",
-								"tense": "future"
-							},
-							"text": "tended to be",
-							"normalized": "tend to be"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " Most of the jobs tended to be in the food industry but I did have one job with the YMCA where I was able to be promoted to a camp director role and that is the closest link to professional experience I have.",
-						"object": {
-							"text": "able to be promoted to a camp director role",
-							"keywords": [
-								{
-									"text": "camp director role"
-								}
-							],
-							"entities": [
-								{
-									"type": "JobTitle",
-									"text": "director"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "be",
-								"tense": "past"
-							},
-							"text": "was",
-							"normalized": "be"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " Most of the jobs tended to be in the food industry but I did have one job with the YMCA where I was able to be promoted to a camp director role and that is the closest link to professional experience I have.",
-						"object": {
-							"text": "promoted to a camp director role",
-							"keywords": [
-								{
-									"text": "camp director role"
-								}
-							],
-							"entities": [
-								{
-									"type": "JobTitle",
-									"text": "director"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "be",
-								"tense": "past"
-							},
-							"text": "be",
-							"normalized": "be"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " Most of the jobs tended to be in the food industry but I did have one job with the YMCA where I was able to be promoted to a camp director role and that is the closest link to professional experience I have.",
-						"object": {
-							"text": "to a camp director role",
-							"keywords": [
-								{
-									"text": "camp director role"
-								}
-							],
-							"entities": [
-								{
-									"type": "JobTitle",
-									"text": "director"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "promote",
-								"tense": "past"
-							},
-							"text": "to be promoted",
-							"normalized": "to be promote"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " I am certified in AdWord fundamentals and am working on Google Analytics and understand getting certifications can be helpful.",
-						"object": {
-							"text": "certified in AdWord fundamentals and am working on Google Analytics and understand getting certifications can be helpful",
-							"keywords": [
-								{
-									"text": "AdWord fundamentals"
-								},
-								{
-									"text": "Google Analytics"
-								},
-								{
-									"text": "certifications"
-								}
-							],
-							"entities": []
-						},
-						"action": {
-							"verb": {
-								"text": "be",
-								"tense": "present"
-							},
-							"text": "am",
-							"normalized": "be"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " I am certified in AdWord fundamentals and am working on Google Analytics and understand getting certifications can be helpful.",
-						"object": {
-							"text": "in AdWord fundamentals",
-							"keywords": [
-								{
-									"text": "AdWord fundamentals"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "certify",
-								"tense": "past"
-							},
-							"text": "am certified",
-							"normalized": "be certify"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " I am certified in AdWord fundamentals and am working on Google Analytics and understand getting certifications can be helpful.",
-						"action": {
-							"verb": {
-								"text": "work",
-								"tense": "present"
-							},
-							"text": "am working",
-							"normalized": "be work"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " I am certified in AdWord fundamentals and am working on Google Analytics and understand getting certifications can be helpful.",
-						"object": {
-							"text": "getting certifications can be helpful",
-							"keywords": [
-								{
-									"text": "certifications"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "understand",
-								"tense": "present"
-							},
-							"text": "understand",
-							"normalized": "understand"
-						}
-					},
-					{
-						"subject": {
-							"text": "My biggest issue right now",
-							"keywords": [
-								{
-									"text": "biggest issue"
-								}
-							]
-						},
-						"sentence": " My biggest issue right now is wanting to apply for full time positions but not graduating until this Spring so I do not know if I will even be considered for the position.",
-						"object": {
-							"text": "wanting to apply for full time positions",
-							"keywords": [
-								{
-									"text": "time positions"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "be",
-								"tense": "present"
-							},
-							"text": "is",
-							"normalized": "be"
-						}
-					},
-					{
-						"subject": {
-							"text": "My biggest issue",
-							"keywords": [
-								{
-									"text": "biggest issue"
-								}
-							]
-						},
-						"sentence": " My biggest issue right now is wanting to apply for full time positions but not graduating until this Spring so I do not know if I will even be considered for the position.",
-						"object": {
-							"text": "to apply for full time positions but not graduating until this Spring so I do not know if I will even be considered for the position",
-							"keywords": [
-								{
-									"text": "time positions"
-								},
-								{
-									"text": "Spring"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "want",
-								"tense": "present"
-							},
-							"text": "wanting",
-							"normalized": "want"
-						}
-					},
-					{
-						"subject": {
-							"text": "My biggest issue",
-							"keywords": [
-								{
-									"text": "biggest issue"
-								}
-							]
-						},
-						"sentence": " My biggest issue right now is wanting to apply for full time positions but not graduating until this Spring so I do not know if I will even be considered for the position.",
-						"object": {
-							"text": "for full time positions",
-							"keywords": [
-								{
-									"text": "time positions"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "apply",
-								"tense": "future"
-							},
-							"text": "is wanting to apply",
-							"normalized": "be want to apply"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " My biggest issue right now is wanting to apply for full time positions but not graduating until this Spring so I do not know if I will even be considered for the position.",
-						"object": {
-							"text": "if I will even be considered for the position",
-							"keywords": [
-								{
-									"text": "position"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "know",
-								"tense": "present",
-								"negated": true
-							},
-							"text": "know",
-							"normalized": "know"
-						}
-					},
-					{
-						"subject": {
-							"text": "you"
-						},
-						"sentence": " What are some of the best qualifications you think a marketing student should have?",
-						"object": {
-							"text": "a marketing student should have",
-							"keywords": [
-								{
-									"text": "marketing student"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "think",
-								"tense": "present"
-							},
-							"text": "think",
-							"normalized": "think"
-						}
-					},
-					{
-						"subject": {
-							"text": "land your first job",
-							"keywords": [
-								{
-									"text": "land"
-								},
-								{
-									"text": "job"
-								}
-							]
-						},
-						"sentence": " How did you land your first job?",
-						"object": {
-							"text": "you"
-						},
-						"action": {
-							"verb": {
-								"text": "do",
-								"tense": "past"
-							},
-							"text": "did",
-							"normalized": "do"
-						}
-					},
-					{
-						"subject": {
-							"text": "you"
-						},
-						"sentence": " How did you land your first job?",
-						"object": {
-							"text": "your first job",
-							"keywords": [
-								{
-									"text": "job"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "land",
-								"tense": "past"
-							},
-							"text": "land",
-							"normalized": "land"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " Will I be able to land a full time job even though I graduate in June?",
-						"object": {
-							"text": "a full time job",
-							"keywords": [
-								{
-									"text": "time job"
-								}
-							]
-						},
-						"action": {
-							"verb": {
-								"text": "land",
-								"tense": "future"
-							},
-							"text": "to land",
-							"normalized": "to land"
-						}
-					},
-					{
-						"subject": {
-							"text": "I"
-						},
-						"sentence": " Will I be able to land a full time job even though I graduate in June?",
-						"action": {
-							"verb": {
-								"text": "graduate",
-								"tense": "present"
-							},
-							"text": "graduate",
-							"normalized": "graduate"
-						}
-					}
-				],
-				"concepts": [
-					{
-						"text": "Full-time",
-						"relevance": 0.949344,
-						"dbpedia_resource": "http://dbpedia.org/resource/Full-time"
-					},
-					{
-						"text": "Google",
-						"relevance": 0.907856,
-						"dbpedia_resource": "http://dbpedia.org/resource/Google"
-					},
-					{
-						"text": "Google services",
-						"relevance": 0.62752,
-						"dbpedia_resource": "http://dbpedia.org/resource/Google_services"
-					},
-					{
-						"text": "Minor league",
-						"relevance": 0.614073,
-						"dbpedia_resource": "http://dbpedia.org/resource/Minor_league"
-					},
-					{
-						"text": "Food",
-						"relevance": 0.612468,
-						"dbpedia_resource": "http://dbpedia.org/resource/Food"
-					},
-					{
-						"text": "Web analytics",
-						"relevance": 0.597546,
-						"dbpedia_resource": "http://dbpedia.org/resource/Web_analytics"
-					}
-				],
-				"categories": [
-					{
-						"score": 0.658104,
-						"label": "/business and industrial/advertising and marketing/marketing"
-					},
-					{
-						"score": 0.419175,
-						"label": "/finance/personal finance/insurance/health insurance"
-					},
-					{
-						"score": 0.40555,
-						"label": "/technology and computing/computer certification"
-					}
-				],
-				"relations": [
-					{
-						"type": "hasAttribute",
-						"sentence": "I am 22 and have worked since I was 16.",
-						"score": 0.973748,
-						"arguments": [
-							{
-								"text": "I",
-								"location": [
-									274,
-									275
-								],
-								"entities": [
-									{
-										"type": "Person",
-										"text": "your"
-									}
-								]
-							},
-							{
-								"text": "16",
-								"location": [
-									280,
-									282
-								],
-								"entities": [
-									{
-										"type": "Age",
-										"text": "16"
-									}
-								]
-							}
-						]
-					},
-					{
-						"type": "affectedBy",
-						"sentence": "Most of the jobs tended to be in the food industry but I did have one job with the YMCA where I was able to be promoted to a camp director role and that is the closest link to professional experience I have.",
-						"score": 0.567517,
-						"arguments": [
-							{
-								"text": "I",
-								"location": [
-									378,
-									379
-								],
-								"entities": [
-									{
-										"type": "Person",
-										"text": "your"
-									}
-								]
-							},
-							{
-								"text": "promoted",
-								"location": [
-									395,
-									403
-								],
-								"entities": [
-									{
-										"type": "EventPersonnel",
-										"text": "promoted"
-									}
-								]
-							}
-						]
-					},
-					{
-						"type": "locatedAt",
-						"sentence": "Most of the jobs tended to be in the food industry but I did have one job with the YMCA where I was able to be promoted to a camp director role and that is the closest link to professional experience I have.",
-						"score": 0.649462,
-						"arguments": [
-							{
-								"text": "I",
-								"location": [
-									378,
-									379
-								],
-								"entities": [
-									{
-										"type": "Person",
-										"text": "your"
-									}
-								]
-							},
-							{
-								"text": "camp",
-								"location": [
-									409,
-									413
-								],
-								"entities": [
-									{
-										"type": "Facility",
-										"text": "camp"
-									}
-								]
-							}
-						]
-					},
-					{
-						"type": "agentOf",
-						"sentence": "Most of the jobs tended to be in the food industry but I did have one job with the YMCA where I was able to be promoted to a camp director role and that is the closest link to professional experience I have.",
-						"score": 0.404817,
-						"arguments": [
-							{
-								"text": "director",
-								"location": [
-									414,
-									422
-								],
-								"entities": [
-									{
-										"type": "Person",
-										"text": "director"
-									}
-								]
-							},
-							{
-								"text": "promoted",
-								"location": [
-									395,
-									403
-								],
-								"entities": [
-									{
-										"type": "EventPersonnel",
-										"text": "promoted"
-									}
-								]
-							}
-						]
-					},
-					{
-						"type": "agentOf",
-						"sentence": "Some of my Questions are:  What are some of the best qualifications you think a marketing student should have?",
-						"score": 0.994475,
-						"arguments": [
-							{
-								"text": "my",
-								"location": [
-									800,
-									802
-								],
-								"entities": [
-									{
-										"type": "Person",
-										"text": "your"
-									}
-								]
-							},
-							{
-								"text": "Questions",
-								"location": [
-									803,
-									812
-								],
-								"entities": [
-									{
-										"type": "EventCommunication",
-										"text": "Questions"
-									}
-								]
-							}
-						]
-					}
-				],
-				"keywords": [
-					{
-						"text": "camp director role",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.915342
-					},
-					{
-						"text": "Senior marketing student",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.893768
-					},
-					{
-						"text": "AdWord fundamentals",
-						"sentiment": {
-							"score": 0.826715,
-							"label": "positive"
-						},
-						"relevance": 0.734724
-					},
-					{
-						"text": "Brief Background",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.730835
-					},
-					{
-						"text": "closest link",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.68823
-					},
-					{
-						"text": "Google Analytics",
-						"sentiment": {
-							"score": 0.826715,
-							"label": "positive"
-						},
-						"relevance": 0.664929
-					},
-					{
-						"text": "biggest issue",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.656433
-					},
-					{
-						"text": "food industry",
-						"sentiment": {
-							"score": -0.502425,
-							"label": "negative"
-						},
-						"relevance": 0.651662
-					},
-					{
-						"text": "professional experience",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.645273
-					},
-					{
-						"text": "marketing degree",
-						"sentiment": {
-							"score": 0.569029,
-							"label": "positive"
-						},
-						"relevance": 0.638288
-					},
-					{
-						"text": "best qualifications",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.628635
-					},
-					{
-						"text": "time positions",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.615585
-					},
-					{
-						"text": "time job",
-						"sentiment": {
-							"score": 0.600532,
-							"label": "positive"
-						},
-						"relevance": 0.573823
-					},
-					{
-						"text": "spring",
-						"sentiment": {
-							"score": -0.267563,
-							"label": "negative"
-						},
-						"relevance": 0.358248
-					},
-					{
-						"text": "Hi",
-						"sentiment": {
-							"score": 0.754777,
-							"label": "positive"
-						},
-						"relevance": 0.330565
-					},
-					{
-						"text": "input",
-						"sentiment": {
-							"score": 0.569029,
-							"label": "positive"
-						},
-						"relevance": 0.298266
-					},
-					{
-						"text": "certifications",
-						"sentiment": {
-							"score": 0.826715,
-							"label": "positive"
-						},
-						"relevance": 0.297555
-					},
-					{
-						"text": "YMCA",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.295509
-					},
-					{
-						"text": "steps",
-						"sentiment": {
-							"score": 0.569029,
-							"label": "positive"
-						},
-						"relevance": 0.294385
-					},
-					{
-						"text": "paths",
-						"sentiment": {
-							"score": 0.612713,
-							"label": "positive"
-						},
-						"relevance": 0.293082
-					},
-					{
-						"text": "suggestions",
-						"sentiment": {
-							"score": 0.741537,
-							"label": "positive"
-						},
-						"relevance": 0.287014
-					},
-					{
-						"text": "communication",
-						"sentiment": {
-							"score": 0,
-							"label": "neutral"
-						},
-						"relevance": 0.282362
-					}
-				]
-			},
-			"extracted_metadata": {
-				"sha1": "907306c849af4fe197dded5b2cef6b14b0186bff",
-				"filename": "1520143759809.zip-4d528b1ab359796ac44936b3f2f8c469.xml",
-				"file_type": "json"
-			},
-			"title": "In need of some Career Advice : marketing"
-		}
-	]
+{  
+   "payload":{  
+      "status":"ok: https://newsapi.org/v2/top-headlines?apiKey=c474c16b92274c538f647d92387b00c7&country=ru&category=sports&pageSize=4&page=1",
+      "results":"[{'source': {'id': None, 'name': 'Tass.ru'}, 'author': None, 'title': 'Футболист \"Зенита\" Паредес расстроен непопаданием в состав сборной Аргентины на ЧМ-2018', 'description': 'В минувшем сезоне полузащитник провел 28 матчей в составе \"Зенита\" во всех турнирах, отметившись 4 голами и 7 результативными', 'url': 'http://tass.ru/sport/5220005', 'urlToImage': 'https://phototass4.cdnvideo.ru/width/1200_4ce85301/tass/m2/uploads/i/20180521/4702536.jpg', 'publishedAt': '2018-05-21T19:21:25Z'}, {'source': {'id': None, 'name': 'Gazeta.ru'}, 'author': None, 'title': 'Допинг в футболе: о сборной России сняли фильм', 'description': 'Известный немецкий журналист и автор ряда фильмов о допинге в спорте Хайо Зеппельт выпустил свою новую работу, где в центре скандала оказалась российская сборная по футболу. Как утверждает автор фильма, игроки национальной команды принимали запрещенные препар…', 'url': 'https://www.gazeta.ru/sport/2018/05/21/a_11759665.shtml', 'urlToImage': 'https://img.gazeta.ru/files3/743/11759743/RIAN_3209767.HR-pic905-895x505-73754.jpg', 'publishedAt': '2018-05-21T18:56:16Z'}, {'source': {'id': None, 'name': 'Sport-express.ru'}, 'author': None, 'title': 'Английские фанаты готовы устроить \"третью мировую\" на ЧМ-2018', 'description': 'Английские фанаты готовятся к противостояниям с российскими во время ЧМ-2018.', 'url': 'http://www.sport-express.ru/football/world/chempionat-mira-2018/news/angliyskie-fanaty-gotovy-ustroit-tretyu-mirovuyu-na-chm-2018-1411626/', 'urlToImage': 'http://ss.sport-express.ru/userfiles/materials/122/1226526/large.jpg', 'publishedAt': '2018-05-21T18:55:05Z'}, {'source': {'id': None, 'name': 'Sport-express.ru'}, 'author': None, 'title': 'Вернуть былое. Хованцев и Польховский – снова в нашей сборной', 'description': 'Стали известны фамилии старших тренеров на следующий сезон. Есть сюрпризы.', 'url': 'https://www.sport-express.ru/biathlon/reviews/vernut-byloe-hovancev-i-polhovskiy-snova-v-nashey-sbornoy-1411619/', 'urlToImage': 'https://ss.sport-express.ru/userfiles/materials/122/1226520/large.jpg', 'publishedAt': '2018-05-21T18:34:44Z'}]"
+   },
+   "typeName":"cortex/Any"
+}{  
+   "payload":{  
+      "status":"ok: https://newsapi.org/v2/everything?apiKey=c474c16b92274c538f647d92387b00c7&sources=cnn&q=trump&pageSize=5&page=1000",
+      "results":"[{'source': {'id': 'cnn', 'name': 'CNN'}, 'author': 'AngelaBonachera', 'title': '5 preguntas que Mark Zuckerberg esquivó ante el Capitolio de Estados Unidos', 'description': 'Zuckerberg daba respuestas vagas y con frecuencia les decía a los miembros del Congreso que su equipo las ampliaría más adelante. Estas son algunas de las cuestiones que quedan por saber.', 'url': 'http://cnnespanol.cnn.com/2018/04/12/5-preguntas-que-mark-zuckerberg-esquivo-ante-el-capitolio-de-estados-unidos/', 'urlToImage': 'https://cnnespanol2.files.wordpress.com/2018/04/180411113650-zuckerberg-hearing-041118-780x439.jpg?quality=100&strip=info', 'publishedAt': '2018-04-12T14:59:29Z'}, {'source': {'id': 'cnn', 'name': 'CNN'}, 'author': 'Catherine E. Shoichet, CNN', 'title': 'ICE raided a meatpacking plant. More than 500 kids missed school the next day', 'description': 'Teachers in local schools suddenly found themselves on the front lines of a crisis after immigration authorities swept through a Tennessee meatpacking plant.', 'url': 'https://www.cnn.com/2018/04/12/us/tennessee-immigration-raid-schools-impact/index.html', 'urlToImage': 'https://cdn.cnn.com/cnnnext/dam/assets/180411155138-southeastern-provisions-raid---restricted-super-tease.jpg', 'publishedAt': '2018-04-12T11:01:28Z'}, {'source': {'id': 'cnn', 'name': 'CNN'}, 'author': 'Madison Park, CNN', 'title': 'What cities and states are doing about guns since the Parkland shooting', 'description': \"Local and state lawmakers aren't holding their breath waiting for the federal government to take action on guns. Here are some highlights of what has passed.\", 'url': 'https://www.cnn.com/2018/04/09/us/gun-laws-since-parkland/index.html', 'urlToImage': 'https://cdn.cnn.com/cnnnext/dam/assets/121226212822-new-york-guns-super-tease.jpg', 'publishedAt': '2018-04-09T08:23:11Z'}, {'source': {'id': 'cnn', 'name': 'CNN'}, 'author': 'CNN Library', 'title': 'CIA Directors Fast Facts', 'description': \"Read CNN's Fast Facts about directors of the CIA. The CIA collects information about foreign governments, organized crime and terrorist groups.\", 'url': 'https://www.cnn.com/2013/11/12/us/cia-directors-fast-facts/index.html', 'urlToImage': 'https://cdn.cnn.com/cnnnext/dam/assets/140526145440-cia-seal-super-tease.png', 'publishedAt': '2018-04-06T13:57:54Z'}, {'source': {'id': 'cnn', 'name': 'CNN'}, 'author': 'Melissa Velásquez Loaiza', 'title': 'Facebook trata de sacudirse los escándalos del pasado y presenta nuevas funciones', 'description': 'La red social trata de seguir adelante luego de una crisis de relaciones públicas por el escándalo de Cambridge Analytica. Facebook presentó nuevas herramientas y nuevas medidas de seguridad. Esto es lo nuevo.', 'url': 'http://cnnespanol.cnn.com/2018/05/02/facebook-trata-de-sacudirse-los-escandalos-del-pasado-y-presenta-nuevas-funciones/', 'urlToImage': 'https://cnnespanol2.files.wordpress.com/2018/05/facebook-f8conference.jpg?quality=100&strip=info&w=1200', 'publishedAt': '2018-05-02T15:41:17Z'}]"
+   },
+   "typeName":"cortex/Any"
+}{  
+   "payload":{  
+      "status":"ok: https://newsapi.org/v2/sources?apiKey=c474c16b92274c538f647d92387b00c7&country=in",
+      "results":"[{'id': 'google-news-in', 'name': 'Google News (India)', 'description': 'Comprehensive, up-to-date India news coverage, aggregated from sources all over the world by Google News.', 'url': 'https://news.google.com', 'category': 'general', 'language': 'en', 'country': 'in'}, {'id': 'the-hindu', 'name': 'The Hindu', 'description': \"The Hindu. latest news, analysis, comment, in-depth coverage of politics, business, sport, environment, cinema and arts from India's national newspaper.\", 'url': 'http://www.thehindu.com', 'category': 'general', 'language': 'en', 'country': 'in'}, {'id': 'the-times-of-india', 'name': 'The Times of India', 'description': 'Times of India brings the Latest News and Top Breaking headlines on Politics and Current Affairs in India and around the World, Sports, Business, Bollywood News and Entertainment, Science, Technology, Health and Fitness news, Cricket and opinions from leading columnists.', 'url': 'http://timesofindia.indiatimes.com', 'category': 'general', 'language': 'en', 'country': 'in'}]"
+   },
+   "typeName":"cortex/Any"
 }
 ```
 
-## Adding News Insights to an agent
+## Adding News Articles to an agent
 ### Prerequisites
-* Acquire an API key from IBM Watson for the News Insights API.
+* Acquire an API key from News API for News Articles.
 
 ### Add the skill
 1. Use **Add** > **Skill** to find and add the News Insights Skill.
 1. Click the skill to select it, and set the following values in the **Properties** panel:
  
-    * **Model**: Select **IBM Watson**.
-    * **API Key**: Enter your API Key for the News Insights API.
+    * **Filter Type**: Select a filter type 
+    * **API Token**: Enter your API Key for News API.
+    * **Batch Size**: Enter the batch size, which must be between 1 and 100
+    * **Batch Number**: Enter the batch number, which must be at least 1
 
 ### Add input and output
 1. Add a service input.
 1. Give the service a name that is unique inside this agent.
 1. Select **text** as the **Input Type**.
-1. Select **News Insights Response** as the **Output Type**.
+1. Select **News Finder Response** as the **Output Type**.
 1. Click **Add Service**.
 
 ### Wiring
-1. Select the News Insights Skill.
+1. Select the News Finder Skill.
 2. Wire the skill to the input using the plus icon {{< icon "zmdi zmdi-plus icon-circle blue-bg" >}} next to the input service you just created.
 3. Wire the skill to the output using the plus icon {{< icon "zmdi zmdi-plus icon-circle green-bg" >}} next to the output that matches the input name for the skill.
 
 ## Product attribution
-This service leverages the News Insights API from IBM Watson Services.
+This service uses the News API for datasets and querying requests. 
 
 
 ## Skill development
