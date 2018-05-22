@@ -134,34 +134,11 @@ The skill returns up to 4 outputs:
 }
 ```
 
-## Adding News Articles to an agent
 ### Prerequisites
 * Acquire an API key from News API for News Articles.
 
-### Add the skill
-1. Use **Add** > **Skill** to find and add the News Insights Skill.
-1. Click the skill to select it, and set the following values in the **Properties** panel:
- 
-    * **Filter Type**: Select a filter type 
-    * **API Token**: Enter your API Key for News API.
-    * **Batch Size**: Enter the batch size, which must be between 1 and 100
-    * **Batch Number**: Enter the batch number, which must be at least 1
-
-### Add input and output
-1. Add a service input.
-1. Give the service a name that is unique inside this agent.
-1. Select **text** as the **Input Type**.
-1. Select **News Finder Response** as the **Output Type**.
-1. Click **Add Service**.
-
-### Wiring
-1. Select the News Articles Skill.
-2. Wire the skill to the input using the plus icon {{< icon "zmdi zmdi-plus icon-circle blue-bg" >}} next to the input service you just created.
-3. Wire the skill to the output using the plus icon {{< icon "zmdi zmdi-plus icon-circle green-bg" >}} next to the output that matches the input name for the skill.
-
 ## Product attribution
 This service uses the News API for datasets and querying requests. 
-
 
 ## Skill development
 This skill utilizes the Cortex function service to execute custom code.

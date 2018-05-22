@@ -9,7 +9,6 @@ properties:
     title: API token
     description: API token for using the website
     type: string
-    defaultValue: 86b2c80b7e6c4570acc7c1dcde485c7a
   -
     name: filter_type
     title: Filter Type
