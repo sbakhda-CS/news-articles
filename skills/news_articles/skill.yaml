@@ -1,5 +1,5 @@
 camel: 1.0.0
-name: cortex/news_articles
+name: na/news_articles
 title: News Articles
 description: Filters news articles by various factors
 
@@ -58,7 +58,7 @@ inputs:
         required: false
     routing:
       all:
-        action: cortex/news_articles
+        action: na/news_articles
         runtime: cortex/functions
         output: output
 
@@ -72,7 +72,6 @@ outputs:
         required: false
       - name: results
         type: array
-        format: objects
         description: result array for articles or sources
         required: false
       - name: error_code

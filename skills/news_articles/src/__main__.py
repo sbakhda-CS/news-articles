@@ -190,7 +190,8 @@ def filter_news(country, category, source, query, batch_size, batch_no, api_toke
         return url, response.get('status'), response.get('sources'), None, None
 
     # return empty array when no results
-    return url, response.get('status'), [], response.get('code'), response.get('message')
+    # return url, response.get('status'), [], response.get('code'), response.get('message')
+    return url, response.get('status'), [], None, response.get('message')
 
 
 # error checking function
