@@ -1,7 +1,7 @@
 camel: 1.0.0
 name: na/news_articles
 title: News Articles
-description: Filters news articles by various factors
+description: This tool allows you to filter news articles and news sources
 
 properties:
   -
@@ -9,6 +9,7 @@ properties:
     title: API token
     description: API token for using the website
     type: string
+    defaultValue: c474c16b92274c538f647d92387b00c7
   -
     name: filter_type
     title: Filter Type
@@ -69,7 +70,7 @@ outputs:
       - name: status
         type: string
         description: if the request was success
-        required: false
+        required: true
       - name: results
         type: array
         description: result array for articles or sources
